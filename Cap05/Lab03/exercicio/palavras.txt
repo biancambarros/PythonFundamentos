@@ -1,6 +1,5 @@
 banana
 laranja
-maçã
 uva
 abacaxi
 melancia
