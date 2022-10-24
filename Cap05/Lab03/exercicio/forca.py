@@ -65,24 +65,49 @@ O   |
 class Forca:
     def __init__(self, palavra):
         self.palavra = palavra
+        self.letras_erradas = []
+        self.letras_certas = []
 
     def adivinhar(self, letra):
-        if letra in self.palavra:
+        if letra in self.palavra and letra not in self.letras_certas:
+            self.letras_certas.append(letra)
+            return True
+        elif letra not in self.palavra and letra not in self.letras_erradas:
+            self.letras_erradas.append(letra)
             return True
         else:
             return False
 
     def checar_perdeu(self):
-        pass
+        return self.checar_ganhou() or (len(self.letras_erradas) == 6)
 
     def checar_ganhou(self):
-        pass
+        if '_' not in self.esconder_palavra_quadro():
+            return True
+        else:
+            return False
 
     def esconder_palavra_quadro(self):
-        pass
+        rtn = ''
+        for letra in self.palavra:
+            if letra not in self.letras_certas:
+                rtn += '_'
+            else:
+                rtn += letra
+        return rtn
 
     def mostrar_status(self):
-        pass
+        print(board[len(self.letras_certas)])
+        print('\nPalavra: ' + self.esconder_palavra_quadro())
+        print('\nLetras erradas: ',)
+        for letra in self.letras_erradas:
+            print(letra, )
+        print()
+        print('\nLetras corretas: ', )
+        for letra in self.letras_certas:
+            print(letra, )
+        print()
+
 
 def sortear_palavra():
     with open("palavras.txt", "rt") as f:
@@ -90,31 +115,25 @@ def sortear_palavra():
     return bank[random.randint(0, len(bank))].strip()
 
 def main():
-    # Executa o programa
-    n_tentativas = len(board)
-    print(board[0])
 
     # Objeto
     jogo = Forca(sortear_palavra())
 
-    # Enquanto o jogo não tiver terminado, print do status, solicita uma letra e faz a leitura do caracter
-    for tentativa in range(len(board)):
-        letra = input("Informe uma letra: ")
-        status = jogo.adivinhar(letra)
-        print(status)
-
     # Verifica o status do jogo
+    #jogo.mostrar_status()
+
+    while not jogo.checar_perdeu():
+        jogo.mostrar_status()
+        letra = input('\nDigite uma letra: ')
+        jogo.adivinhar(letra[0])
+
     jogo.mostrar_status()
 
-    # De acordo com o status, imprime mensagem na tela para o usuário
-    #if jogo.checar_ganhou():
-    #    print('\nParabéns! Você venceu!!')
-    #else:
-    #    print('\nGame over! Você perdeu.')
-    #    print('A palavra era ' + game.word)
-
-    #print('\nFoi bom jogar com você! Agora vá estudar!\n')
-
+    if jogo.checar_ganhou():
+        print('\nParabéns! Você ganhou!!')
+    else:
+        print('\nGame over. Você perdeu. ')
+        print('A palavra era ' + jogo.palavra)
 
 if __name__ == "__main__":
     main()
