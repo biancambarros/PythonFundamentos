@@ -97,7 +97,7 @@ class Forca:
         return rtn
 
     def mostrar_status(self):
-        print(board[len(self.letras_certas)])
+        print(board[len(self.letras_erradas)])
         print('\nPalavra: ' + self.esconder_palavra_quadro())
         print('\nLetras erradas: ',)
         for letra in self.letras_erradas:
